@@ -1,0 +1,148 @@
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it's on top of other content */
+  /* Initial state for transition */
+  opacity: 0;
+  pointer-events: none; /* Prevents interaction when hidden */
+  transition: opacity 0.5s ease-out;
+}
+
+.modal.modal-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  /* Initial state for slide-in transition */
+  transform: translateY(-100%); /* Start off-screen top */
+  transition: transform 0.8s ease-out;
+}
+
+.modal.modal-active .modal-content {
+  transform: translateY(0); /* Slide to center */
+}
+
+/* New Styles */
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
+}
+
+.form-row input {
+  width: 100%;
+}
+
+.modal-form input,
+.modal-form select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box; /* To include padding in the width */
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease;
+}
+
+.btn-generate {
+  background-color: #007bff; /* Blue */
+}
+
+.btn-generate:hover {
+  background-color: #0056b3;
+}
+
+.btn-add {
+  background-color: #28a745; /* Green */
+}
+
+.btn-add:hover {
+  background-color: #1e7e34;
+}
+
+.btn-close {
+  background-color: #dc3545; /* Red */
+}
+
+.btn-close:hover {
+  background-color: #c82333;
+}
+
+.image-preview {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.image-preview img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.image-url {
+  word-wrap: break-word;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+  }
+  .modal-actions {
+    flex-direction: column;
+  }
+  .modal-btn {
+    width: 100%;
+  }
+}
