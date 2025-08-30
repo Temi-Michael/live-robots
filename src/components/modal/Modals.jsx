@@ -69,7 +69,7 @@ export default function Modals(props) {
       }
 
       // 3. If phone number is unique, proceed to add the robot
-      const response = await fetch("http://localhost:5000/api/robots", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/robots`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -5,7 +5,11 @@ const mongoose = require("mongoose");
 
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+  origin: 'https://live-robots.netlify.app/',
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 mongoose
