@@ -13,7 +13,7 @@ function App() {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/robots")
+    fetch(`${process.env.REACT_APP_API_URL}/api/robots`)
       .then((response) => response.json())
       .then((users) => setRobot(users))
       .catch(err => console.log('Error fetching robots: ', err));

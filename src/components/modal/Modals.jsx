@@ -60,7 +60,7 @@ export default function Modals(props) {
 
     try {
       // 2. Check if phone number already exists
-      const checkPhoneRes = await fetch(`http://localhost:5000/api/robots/check-phone/${newRobot.phone}`);
+      const checkPhoneRes = await fetch(`${process.env.REACT_APP_API_URL}/api/robots/check-phone/${newRobot.phone}`);
       const phoneExistsData = await checkPhoneRes.json();
 
       if (phoneExistsData.exists) {

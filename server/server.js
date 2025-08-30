@@ -6,8 +6,8 @@ const mongoose = require("mongoose");
 const app = express();
 
 const corsOptions = {
-  origin: 'https://live-robots.netlify.app/',
-  optionsSuccessStatus: 200
+  origin: "https://live-robots.netlify.app",
+  optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -39,7 +39,9 @@ app.get("/api/robots/check-phone/:phone", async (req, res) => {
     res.json({ exists: !!robot });
   } catch (error) {
     console.error("Error checking phone number:", error);
-    res.status(500).json({ error: "Server error while checking phone number." });
+    res
+      .status(500)
+      .json({ error: "Server error while checking phone number." });
   }
 });
 
@@ -65,14 +67,16 @@ app.post("/api/robots", async (req, res) => {
     res.status(201).json(savedRobot); // Respond with the created robot
   } catch (error) {
     // Handle potential errors, like duplicate username/email
-    if (error.code === 11000) { // This is the error code for a duplicate key
-        return res.status(400).json({ msg: "A robot with this email, username, or phone number already exists." });
+    if (error.code === 11000) {
+      // This is the error code for a duplicate key
+      return res.status(400).json({
+        msg: "A robot with this email, username, or phone number already exists.",
+      });
     }
     console.error("Error saving robot:", error);
     res.status(500).json({ error: "Server error while saving robot." });
   }
 });
-
 
 app.get("/", (req, res) => {
   res.send("Backend server is running!");
