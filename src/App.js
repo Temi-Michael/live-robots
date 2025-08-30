@@ -13,7 +13,7 @@ function App() {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/robots")
+    fetch("https://robo-friends-server.onrender.com/api/robots")
       .then((response) => response.json())
       .then((users) => setRobot(users))
       .catch(err => console.log('Error fetching robots: ', err));
@@ -31,7 +31,7 @@ function App() {
     return robot.name.toLowerCase().includes(searched.toLowerCase());
   });
 
-  
+
 
   return (
     <div className="tc">

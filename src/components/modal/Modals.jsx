@@ -19,6 +19,7 @@ export default function Modals(props) {
   });
   const [selectedOptionKey, setSelectedOptionKey] = useState("");
   const [generatedImageUrl, setGeneratedImageUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const handleSelectChange = (e) => {
     setSelectedOptionKey(e.target.value);
   };
@@ -38,6 +39,8 @@ export default function Modals(props) {
   };
 
   const handleAdd = async () => {
+    if (isLoading) return;
+
     const newRobot = {
       name: `${user.firstname} ${user.lastname}`.trim(),
       username: user.username,
@@ -46,7 +49,6 @@ export default function Modals(props) {
       image: generatedImageUrl,
     };
 
-    // 1. General validation
     if (
       !newRobot.name ||
       !newRobot.username ||
@@ -58,47 +60,61 @@ export default function Modals(props) {
       return;
     }
 
+    setIsLoading(true);
+
     try {
-      // 2. Check if phone number already exists
-      const checkPhoneRes = await fetch(`http://localhost:5000/api/robots/check-phone/${newRobot.phone}`);
+      const checkPhoneRes = await fetch(`${process.env.REACT_APP_API_URL}/api/robots/check-phone/${newRobot.phone}`);
+      if (!checkPhoneRes.ok) {
+        throw new Error(`HTTP error! status: ${checkPhoneRes.status}`);
+      }
+      const phoneContentType = checkPhoneRes.headers.get("content-type");
+      if (!phoneContentType || !phoneContentType.includes("application/json")) {
+        const text = await checkPhoneRes.text();
+        throw new TypeError(`Expected JSON, got ${phoneContentType}. Response body: ${text}`);
+      }
       const phoneExistsData = await checkPhoneRes.json();
 
       if (phoneExistsData.exists) {
         alert("A robot with this phone number already exists. Please use a different number.");
-        return; // Stop the function
+      } else {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/robots`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newRobot),
+        });
+
+        if (!response.ok) {
+          const errorContentType = response.headers.get("content-type");
+          if (errorContentType && errorContentType.includes("application/json")) {
+            const errorData = await response.json();
+            throw new Error(errorData.msg || `HTTP error! status: ${response.status}`);
+          } else {
+            const text = await response.text();
+            throw new Error(`HTTP error! status: ${response.status}. Response body: ${text}`);
+          }
+        }
+
+        const addedRobot = await response.json();
+        props.onAddRobot(addedRobot);
+
+        props.setTrigger(false);
+        setGeneratedImageUrl("");
+        setUser({
+          firstname: "",
+          lastname: "",
+          username: "",
+          phoneNumber: "",
+          email: "",
+        });
+        setSelectedOptionKey("");
       }
-
-      // 3. If phone number is unique, proceed to add the robot
-      const response = await fetch("http://localhost:5000/api/robots", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newRobot),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.msg || "Failed to add robot.");
-      }
-
-      const addedRobot = await response.json();
-      props.onAddRobot(addedRobot);
-
-      // Reset form and close modal
-      props.setTrigger(false);
-      setGeneratedImageUrl("");
-      setUser({
-        firstname: "",
-        lastname: "",
-        username: "",
-        phoneNumber: "",
-        email: "",
-      });
-      setSelectedOptionKey("");
     } catch (error) {
       console.error("Error adding robot:", error);
       alert(`An error occurred: ${error.message}`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -187,10 +203,11 @@ export default function Modals(props) {
         <div className="modal-actions">
           <button
             type="button"
-            className="modal-btn btn-add"
+            className={`modal-btn btn-add ${isLoading ? "btn-loading" : ""}`}
             onClick={handleAdd}
+            disabled={isLoading}
           >
-            Add Robot
+            {isLoading ? "Adding..." : "Add Robot"}
           </button>
           <button
             type="button"

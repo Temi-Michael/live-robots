@@ -1,4 +1,3 @@
-
 .modal {
   position: fixed;
   top: 0;
@@ -132,6 +131,14 @@
   margin-top: 10px;
   font-size: 0.8rem;
   color: #666;
+}
+
+/* Loading state for Add button */
+.btn-add:disabled,
+.btn-add.btn-loading {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.65;
 }
 
 /* Responsive adjustments */
