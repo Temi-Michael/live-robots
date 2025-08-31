@@ -29,7 +29,9 @@ export default function Modals(props) {
       const imageUrl = `https://robohash.org/${user.firstname}${user.lastname}${robotstyle[selectedOptionKey]}`;
       setGeneratedImageUrl(imageUrl);
     } else {
-      alert("Please fill out first name, last name, and select a style to generate an image.");
+      alert(
+        "Please fill out first name, last name, and select a style to generate an image."
+      );
     }
   };
 
@@ -63,36 +65,52 @@ export default function Modals(props) {
     setIsLoading(true);
 
     try {
-      const checkPhoneRes = await fetch(`${process.env.REACT_APP_API_URL}/api/robots/check-phone/${newRobot.phone}`);
+      const checkPhoneRes = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/robots/check-phone/${newRobot.phone}`
+      );
       if (!checkPhoneRes.ok) {
         throw new Error(`HTTP error! status: ${checkPhoneRes.status}`);
       }
       const phoneContentType = checkPhoneRes.headers.get("content-type");
       if (!phoneContentType || !phoneContentType.includes("application/json")) {
         const text = await checkPhoneRes.text();
-        throw new TypeError(`Expected JSON, got ${phoneContentType}. Response body: ${text}`);
+        throw new TypeError(
+          `Expected JSON, got ${phoneContentType}. Response body: ${text}`
+        );
       }
       const phoneExistsData = await checkPhoneRes.json();
 
       if (phoneExistsData.exists) {
-        alert("A robot with this phone number already exists. Please use a different number.");
+        alert(
+          "A robot with this phone number already exists. Please use a different number."
+        );
       } else {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/robots`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newRobot),
-        });
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/robots`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newRobot),
+          }
+        );
 
         if (!response.ok) {
           const errorContentType = response.headers.get("content-type");
-          if (errorContentType && errorContentType.includes("application/json")) {
+          if (
+            errorContentType &&
+            errorContentType.includes("application/json")
+          ) {
             const errorData = await response.json();
-            throw new Error(errorData.msg || `HTTP error! status: ${response.status}`);
+            throw new Error(
+              errorData.msg || `HTTP error! status: ${response.status}`
+            );
           } else {
             const text = await response.text();
-            throw new Error(`HTTP error! status: ${response.status}. Response body: ${text}`);
+            throw new Error(
+              `HTTP error! status: ${response.status}. Response body: ${text}`
+            );
           }
         }
 
