@@ -10,6 +10,7 @@ export default function Modals(props) {
     username: "",
     email: "",
     phoneNumber: "",
+    styleType: "",
   });
   const [robotstyle] = useState({
     Robots: ".png?set=set1",
@@ -21,12 +22,17 @@ export default function Modals(props) {
   const [generatedImageUrl, setGeneratedImageUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const handleSelectChange = (e) => {
-    setSelectedOptionKey(e.target.value);
+    const newType = e.target.value;
+    setSelectedOptionKey(newType);
+    setUser((prevUser) => ({ ...prevUser, styleType: newType }));
   };
 
   const handleGenerateClick = () => {
-    if (user.firstname && user.lastname && selectedOptionKey) {
-      const imageUrl = `https://robohash.org/${user.firstname}${user.lastname}${robotstyle[selectedOptionKey]}`;
+    // For the URL, we remove all spaces
+    const firstName = user.firstname.replace(/\s/g, "");
+    const lastName = user.lastname.replace(/\s/g, "");
+    if (firstName && lastName && selectedOptionKey) {
+      const imageUrl = `https://robohash.org/${firstName}${lastName}${robotstyle[selectedOptionKey]}`;
       setGeneratedImageUrl(imageUrl);
     } else {
       alert(
@@ -37,18 +43,24 @@ export default function Modals(props) {
 
   const handleInfo = (e) => {
     const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
+    setUser((prevUser) => ({ ...prevUser, [name]: value }));
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    setUser((prevUser) => ({ ...prevUser, [name]: value.trim() }));
   };
 
   const handleAdd = async () => {
     if (isLoading) return;
 
     const newRobot = {
-      name: `${user.firstname} ${user.lastname}`.trim(),
-      username: user.username,
-      email: user.email,
-      phone: user.phoneNumber,
+      name: `${user.firstname.trim()} ${user.lastname.trim()}`.trim(),
+      username: user.username.trim(),
+      email: user.email.trim(),
+      phone: user.phoneNumber.trim(),
       image: generatedImageUrl,
+      styleType: user.styleType,
     };
 
     if (
@@ -125,6 +137,7 @@ export default function Modals(props) {
           username: "",
           phoneNumber: "",
           email: "",
+          styleType: "",
         });
         setSelectedOptionKey("");
       }
@@ -139,6 +152,13 @@ export default function Modals(props) {
   return (
     <div>
       <PopUp trigger={props.trigger} setTrigger={props.setTrigger}>
+        <div className="modal-info-box">
+          <p>
+            <strong>Note:</strong> A unique phone number is required for each
+            robot as it will be used for future updates. New robots cannot be
+            created with a phone number that is already in use.
+          </p>
+        </div>
         <form className="modal-form">
           <div className="form-row">
             <input
@@ -148,6 +168,7 @@ export default function Modals(props) {
               id="firstname"
               placeholder="First Name"
               onChange={handleInfo}
+              onBlur={handleBlur}
             />
             <input
               type="text"
@@ -156,6 +177,7 @@ export default function Modals(props) {
               id="lastname"
               placeholder="Last Name"
               onChange={handleInfo}
+              onBlur={handleBlur}
             />
           </div>
 
@@ -167,6 +189,7 @@ export default function Modals(props) {
               id="username"
               placeholder="Username"
               onChange={handleInfo}
+              onBlur={handleBlur}
             />
           </div>
           <div className="form-group">
@@ -177,6 +200,7 @@ export default function Modals(props) {
               id="email"
               placeholder="Email"
               onChange={handleInfo}
+              onBlur={handleBlur}
             />
           </div>
           <div className="form-group">
@@ -187,6 +211,7 @@ export default function Modals(props) {
               id="phoneNumber"
               placeholder="Phone Number"
               onChange={handleInfo}
+              onBlur={handleBlur}
             />
           </div>
           <div className="form-row">
@@ -239,6 +264,7 @@ export default function Modals(props) {
                 username: "",
                 email: "",
                 phoneNumber: "",
+                styleType: "",
               });
               setSelectedOptionKey("");
             }}

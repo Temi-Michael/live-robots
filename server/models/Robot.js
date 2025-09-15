@@ -8,7 +8,6 @@ const RobotSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    unique: true,
   },
   email: {
     type: String,
@@ -23,6 +22,10 @@ const RobotSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
+  },
+  styleType: {
+    type: String,
+    required: true,
   },
   date: {
     type: Date,

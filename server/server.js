@@ -42,10 +42,10 @@ app.get("/api/robots/check-phone/:phone", async (req, res) => {
 // POST: Add a new robot
 app.post("/api/robots", async (req, res) => {
   try {
-    const { name, username, email, phone, image } = req.body;
+    const { name, username, email, phone, image, styleType } = req.body;
 
     // Basic validation
-    if (!name || !username || !email || !phone || !image) {
+    if (!name || !username || !email || !phone || !image || !styleType) {
       return res.status(400).json({ msg: "Please enter all fields" });
     }
 
@@ -55,10 +55,13 @@ app.post("/api/robots", async (req, res) => {
       email,
       phone,
       image,
+      styleType,
     });
 
     const savedRobot = await newRobot.save();
-    res.status(201).json(savedRobot); // Respond with the created robot
+    const debugResponse = savedRobot.toObject();
+    debugResponse.name = "DEBUG: " + savedRobot.name;
+    res.status(201).json(debugResponse); // Respond with the created robot
   } catch (error) {
     // Handle potential errors, like duplicate username/email
     if (error.code === 11000) { // This is the error code for a duplicate key

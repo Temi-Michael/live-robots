@@ -39,6 +39,26 @@
   transform: translateY(0); /* Slide to center */
 }
 
+/* Info box at the top of the modal */
+.modal-info-box {
+  background-color: #eef7ff; /* Light blue background */
+  border-left: 4px solid #007bff; /* Blue left border */
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+
+.modal-info-box p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #004085; /* Darker blue text */
+  line-height: 1.4;
+}
+
+.modal-info-box p strong {
+  color: #002752; /* Even darker blue for the 'Note:' */
+}
+
 /* New Styles */
 .modal-form {
   display: flex;
