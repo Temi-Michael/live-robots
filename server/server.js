@@ -59,9 +59,7 @@ app.post("/api/robots", async (req, res) => {
     });
 
     const savedRobot = await newRobot.save();
-    const debugResponse = savedRobot.toObject();
-    debugResponse.name = "DEBUG: " + savedRobot.name;
-    res.status(201).json(debugResponse); // Respond with the created robot
+    res.status(201).json(savedRobot); // Respond with the created robot
   } catch (error) {
     // Handle potential errors, like duplicate username/email
     if (error.code === 11000) { // This is the error code for a duplicate key
