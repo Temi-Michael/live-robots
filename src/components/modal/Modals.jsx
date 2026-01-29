@@ -13,10 +13,10 @@ export default function Modals(props) {
     styleType: "",
   });
   const [robotstyle] = useState({
-    Robots: ".png?set=set1",
-    Monsters: ".png?set=set2",
-    Aliens: ".png?set=set3",
-    Cats: ".png?set=set4",
+    Robot: ".png?set=set1",
+    Monster: ".png?set=set2",
+    Alien: ".png?set=set3",
+    Cat: ".png?set=set4",
   });
   const [selectedOptionKey, setSelectedOptionKey] = useState("");
   const [generatedImageUrl, setGeneratedImageUrl] = useState("");
@@ -250,7 +250,7 @@ export default function Modals(props) {
             onClick={handleAdd}
             disabled={isLoading}
           >
-            {isLoading ? "Adding..." : `Add ${user.styleType}`}
+            {isLoading ? `Adding ${user.styleType}...` : `Add ${user.styleType}`}
           </button>
           <button
             type="button"
