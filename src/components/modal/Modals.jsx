@@ -250,7 +250,7 @@ export default function Modals(props) {
             onClick={handleAdd}
             disabled={isLoading}
           >
-            {isLoading ? "Adding..." : "Add Robot"}
+            {isLoading ? "Adding..." : `Add ${user.styleType}`}
           </button>
           <button
             type="button"
